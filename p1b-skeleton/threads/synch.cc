@@ -104,11 +104,53 @@ Semaphore::V()
 // Your solution for Task 2
 // TODO
 
-Lock::Lock(char* debugName) { }
-Lock::~Lock() { }
-void Lock::Acquire() { }
-void Lock::Release() { }
-bool Lock::isHeldByCurrentThread() { }
+Lock::Lock(char* debugName) { 
+    bool value = 0;
+    Thread *owner; 
+    queue = new List; 
+    
+}
+Lock::~Lock() { 
+    delete queue;
+
+
+}
+void Lock::Acquire() { 
+    IntStatus oldLevel = interrupt->SetLevel(IntOff); 
+    while(value){
+        queue->Append((void*)currentThread); 
+        currentThread->Sleep();
+    }
+    value = 1;
+    owner = currentThread; 
+    interrupt->SetLevel(oldLevel); 
+}
+
+void Lock::Release() {
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+    if( isHeldByCurrentThread() ){
+        value = 0;
+        owner = NULL;
+        Thread * newThread = (Thread *)queue->Remove(); 
+
+        if( newThread != NULL ){
+            scheduler->ReadyToRun(newThread);
+        }
+    }
+    interrupt->SetLevel(oldLevel);
+
+} 
+
+bool Lock::isHeldByCurrentThread() {
+    if(currentThread == owner ){
+        return true;
+    } 
+    else{
+        return false; 
+    } 
+
+ }
 
 // Your solution for Task 3
 // TODO
