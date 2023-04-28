@@ -112,8 +112,6 @@ Lock::Lock(char* debugName) {
 }
 Lock::~Lock() { 
     delete queue;
-
-
 }
 void Lock::Acquire() { 
     IntStatus oldLevel = interrupt->SetLevel(IntOff); 
