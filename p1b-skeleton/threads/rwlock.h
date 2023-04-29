@@ -11,9 +11,9 @@ private:
 	  int WR;
 	  int AW;
 	  int WW;
-	  Condition okToRead;
-	  Condition okToWrite;
-	  Lock lock;
+	  Condition * okToRead;
+	  Condition*  okToWrite;
+	  Lock * lock;
 	  
 public:
     	RWLock();

@@ -48,10 +48,10 @@
 #define START_WRITE() lck[hash]->Acquire() //TODO
 #define END_WRITE() lck[hash]->Release() //TODO
 #elif defined P1_RWLOCK //using our rwlock. Your solution for Task 3
-#define START_READ() do{}while(0) //TODO
-#define END_READ() do{}while(0) //TODO
-#define START_WRITE() do{}while(0) //TODO
-#define END_WRITE() do{}while(0) //TODO
+#define START_READ() rwlck[hash]->startRead() //TODO
+#define END_READ() rwlck[hash]->doneRead() //TODO
+#define START_WRITE() rwlck[hash]->startWrite() //TODO
+#define END_WRITE() rwlck[hash]->doneWrite() //TODO
 #else //else behave like NOLOCK (no option passed)
 #define START_READ() do{}while(0)
 #define END_READ() do{}while(0)
