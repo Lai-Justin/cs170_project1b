@@ -144,11 +144,10 @@ bool Lock::isHeldByCurrentThread() {
     if(currentThread == owner ){
         return true;
     } 
-    else{
+    else {
         return false; 
     } 
-
- }
+}
 
 // Your solution for Task 3
 // TODO
@@ -157,7 +156,7 @@ Condition::Condition(char* debugName) {
     queue = new List; 
 }
 Condition::~Condition() { 
-    delete queue
+    delete queue;
 }
 void Condition::Wait(Lock* conditionLock) { 
     if(!conditionLock->isHeldByCurrentThread()){
@@ -178,7 +177,7 @@ void Condition::Signal(Lock* conditionLock) {
         return;
     }
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
-    Thread *nextThread = (Thread*)waitqueue->Remove();
+    Thread *nextThread = (Thread*)queue->Remove();
     
     if(nextThread != NULL){
         scheduler->ReadyToRun(nextThread);
@@ -193,11 +192,11 @@ void Condition::Broadcast(Lock* conditionLock) {
 
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    Thread *nextThread = (Thread *)waitqueue->Remove();
+    Thread *nextThread = (Thread *)queue->Remove();
 
     while(nextThread != NULL){
         scheduler->ReadyToRun(nextThread);
-        nextThread = (Thread*)waitqueue->Remove();
+        nextThread = (Thread*)queue->Remove();
     }
     interrupt->SetLevel(oldLevel); 
  }
