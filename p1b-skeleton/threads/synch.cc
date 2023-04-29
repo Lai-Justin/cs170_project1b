@@ -141,10 +141,10 @@ void Lock::Release() {
 } 
 
 bool Lock::isHeldByCurrentThread() {
-    if(currentThread == owner ){
+    if(currentThread == owner){
         return true;
     } 
-    else {
+    else{
         return false; 
     } 
 }
@@ -158,6 +158,7 @@ Condition::Condition(char* debugName) {
 Condition::~Condition() { 
     delete queue;
 }
+
 void Condition::Wait(Lock* conditionLock) { 
     if(!conditionLock->isHeldByCurrentThread()){
         return;
@@ -173,6 +174,7 @@ void Condition::Wait(Lock* conditionLock) {
     interrupt->SetLevel(oldLevel); 
     
 }
+
 void Condition::Signal(Lock* conditionLock) { 
     if (!conditionLock->isHeldByCurrentThread()){
         return;
@@ -186,6 +188,9 @@ void Condition::Signal(Lock* conditionLock) {
     
     interrupt->SetLevel(oldLevel); 
 }
+
+
+
 void Condition::Broadcast(Lock* conditionLock) {
     if(!conditionLock->isHeldByCurrentThread()){
         return;
@@ -193,7 +198,7 @@ void Condition::Broadcast(Lock* conditionLock) {
 
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    Thread *nextThread = (Thread *)queue->Remove();
+    Thread *nextThread = (Thread*)queue->Remove();
 
     while(nextThread != NULL){
         scheduler->ReadyToRun(nextThread);
@@ -202,4 +207,18 @@ void Condition::Broadcast(Lock* conditionLock) {
     
     interrupt->SetLevel(oldLevel); 
  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
