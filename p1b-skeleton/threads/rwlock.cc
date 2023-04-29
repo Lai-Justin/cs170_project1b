@@ -55,7 +55,7 @@ void RWLock::startWrite(){
  }
 void RWLock::doneWrite(){
     int status;
-    lock->Release();
+    lock->Acquire();
     AW--; // No longer active
     if (WW > 0){ // Give priority to writers
         okToWrite->Signal(lock); // Wake up one writer

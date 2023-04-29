@@ -127,12 +127,12 @@ void Lock::Acquire() {
 void Lock::Release() {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    if( isHeldByCurrentThread() ){
+    if(isHeldByCurrentThread()){
         value = 0;
         owner = NULL;
         Thread * newThread = (Thread *)queue->Remove(); 
 
-        if( newThread != NULL ){
+        if(newThread != NULL){
             scheduler->ReadyToRun(newThread);
         }
     }
@@ -163,6 +163,7 @@ void Condition::Wait(Lock* conditionLock) {
         return;
     }
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
     conditionLock->Release();
     queue->Append((void*)currentThread);
 
@@ -198,6 +199,7 @@ void Condition::Broadcast(Lock* conditionLock) {
         scheduler->ReadyToRun(nextThread);
         nextThread = (Thread*)queue->Remove();
     }
+    
     interrupt->SetLevel(oldLevel); 
  }
 

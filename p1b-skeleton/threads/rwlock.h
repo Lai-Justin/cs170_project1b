@@ -13,7 +13,7 @@ private:
 	  int WW;
 	  Condition * okToRead;
 	  Condition*  okToWrite;
-	  Lock * lock;
+	  Lock* lock;
 	  
 public:
     	RWLock();
@@ -23,7 +23,7 @@ public:
     	void doneRead();
     // Writer
     	void startWrite();
-    	void  doneWrite();
+    	void doneWrite();
 };
 
 #endif
