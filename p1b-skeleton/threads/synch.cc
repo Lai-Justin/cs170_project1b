@@ -153,8 +153,52 @@ bool Lock::isHeldByCurrentThread() {
 // Your solution for Task 3
 // TODO
 
-Condition::Condition(char* debugName) { }
-Condition::~Condition() { }
-void Condition::Wait(Lock* conditionLock) { }
-void Condition::Signal(Lock* conditionLock) { }
-void Condition::Broadcast(Lock* conditionLock) { }
+Condition::Condition(char* debugName) { 
+    queue = new List; 
+}
+Condition::~Condition() { 
+    delete queue
+}
+void Condition::Wait(Lock* conditionLock) { 
+    if(!conditionLock->isHeldByCurrentThread()){
+        return;
+    }
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+    conditionLock->Release();
+    queue->Append((void*)currentThread);
+
+    currentThread->Sleep();
+    conditionLock->Acquire();
+
+    interrupt->SetLevel(oldLevel); 
+    
+}
+void Condition::Signal(Lock* conditionLock) { 
+    if (!conditionLock->isHeldByCurrentThread()){
+        return;
+    }
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+    Thread *nextThread = (Thread*)waitqueue->Remove();
+    
+    if(nextThread != NULL){
+        scheduler->ReadyToRun(nextThread);
+    }
+    
+    interrupt->SetLevel(oldLevel); 
+}
+void Condition::Broadcast(Lock* conditionLock) {
+    if(!conditionLock->isHeldByCurrentThread()){
+        return;
+    }
+
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+    Thread *nextThread = (Thread *)waitqueue->Remove();
+
+    while(nextThread != NULL){
+        scheduler->ReadyToRun(nextThread);
+        nextThread = (Thread*)waitqueue->Remove();
+    }
+    interrupt->SetLevel(oldLevel); 
+ }
+
